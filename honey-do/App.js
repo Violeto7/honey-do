@@ -8,7 +8,6 @@ import {styles} from './assets/styles';
 import { Requests } from './screens/requests';
 import { Backlog } from './screens/backlog';
 
-
 export default function App() {
 
   const Tab = createBottomTabNavigator();
