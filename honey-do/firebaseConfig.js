@@ -7,8 +7,8 @@ import { getAuth, initializeAuth } from "firebase/auth";
 import {getFirestore, collection, getDocs} from 'firebase/firestore';
 
 //Imports stuff for persistence
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getReactNativePersistence} from "firebase/auth/react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage"; //npm i firebase@9.6.11
+import { getReactNativePersistence} from 'firebase/auth/react-native';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
