@@ -36,7 +36,31 @@ export const userConverter = {
     );
   },
 };
-
+class Request {
+  constructor(id, title, details){
+      this.id = id;
+      this.title = title;
+      this.details = details;
+  }
+  toString() {
+      return this.id + ', ' + this.title + ', ' + this.details;
+  }
+}
+export const requestConverter = {
+  toFirestore: (request) => {
+    return {
+      id: request.id,
+      title: request.title,
+      details: request.details,
+    };
+  },
+  fromFirestore: (snapshot, options) => {
+    const data = snapshot.data(options);
+    return new Request(
+      data.id, data.title, data.details
+    );
+  },
+};
 //Updates user object in database
 export async function postUser(userDB){//Sends user object to database
   if(auth.currentUser){

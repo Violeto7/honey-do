@@ -1,14 +1,8 @@
-import {collection, addDoc, getDoc, doc, updateDoc, arrayRemove, arrayUnion} from "firebase/firestore";
+import {collection, addDoc, getDoc, doc, updateDoc, arrayRemove, arrayUnion, setDoc} from "firebase/firestore";
 import { useState, useEffect } from 'react';
+import { requestConverter } from "../firebase";
 import {db, auth} from '../firebaseConfig';//Imports database
 //class for storing the Request info displayed on the Request search and cookbook page
-class Request {
-    constructor(id, title, details){
-        this.id = id;
-        this.title = title;
-        this.details = details;
-    }
-}
 
 let RequestLDB = [];
 function setRequestLDB(arr){
@@ -31,17 +25,16 @@ async function getRequestsDB() {
     }
 }
 
-async function addRequestDB(id) {
+async function addRequestDB(req) {
     //Function to add item into /Pantry/UID Requests array
     try {
-        getRequestsDB();
+        //getRequestsDB();
         if (auth.currentUser) {
 
-            setRequestLDB((oldIng) => [...oldIng, id]);
-            let RequestDB = doc(db, "Requests", auth.currentUser.uid); //Database entry for the user
-            await updateDoc(RequestDB, {
-            RequestID: arrayUnion(id),
-        });}
+            //setRequestLDB((oldIng) => [...oldIng, req]);
+            let RequestDB = doc(db, "Requests", auth.currentUser.uid).withConverter(requestConverter); //Database entry for the user
+            await setDoc(RequestDB, {Requests: new Request('1', "Az PC Cover", " ")});
+        }
     }catch (e) {
         alert(e);
     }
@@ -84,4 +77,4 @@ async function getPantryDB() {
   }
 }
 
-export {Request, RequestLDB, setRequestLDB, getRequestsDB, addRequestDB, removeRequestDB, ingredientsMDB, getPantryDB};
+export {RequestLDB, setRequestLDB, getRequestsDB, addRequestDB, removeRequestDB, ingredientsMDB, getPantryDB};
