@@ -58,8 +58,6 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
             auth.currentUser.uid,
             auth.currentUser.email,
             [],
-            [],
-            {}
           )
         );
 

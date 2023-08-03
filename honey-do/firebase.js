@@ -2,20 +2,23 @@ import {
   setDoc,
   doc,
   getDoc,
+  collection,
+  getDocs
 } from "firebase/firestore";
 import { db, auth } from "./firebaseConfig"; //Imports database
 import { useState, createContext } from "react";
 
 
 export class User {
-  constructor(name, uid, backlog) {
+  constructor(name, uid, email, backlog) {
     this.name = name;
     this.uid = uid;
     this.backlog = backlog;
+    this.email = email;
   }
   toString() {
     return (
-      "Name: " + this.name + ", UID: " + this.uid + ", backlog: " + this.backlog);
+      "Name: " + this.name + ", UID: " + this.uid + ", email: " + this.email + ", backlog: " + this.backlog);
   }
 }
 
@@ -25,6 +28,7 @@ export const userConverter = {
       name: user.name,
       uid: user.uid,
       backlog: user.backlog,
+      email: user.email,
     };
   },
   fromFirestore: (snapshot, options) => {
@@ -32,10 +36,12 @@ export const userConverter = {
     return new User(
       data.name,
       data.uid,
-      data.backlog
+      data.backlog,
+      data.email
     );
   },
 };
+
 class Request {
   constructor(id, title, details){
       this.id = id;
@@ -43,7 +49,7 @@ class Request {
       this.details = details;
   }
   toString() {
-      return this.id + ', ' + this.title + ', ' + this.details;
+      return "Id: " + this.id + ', Title: ' + this.title + ', Details: ' + this.details;
   }
 }
 export const requestConverter = {
@@ -61,6 +67,7 @@ export const requestConverter = {
     );
   },
 };
+
 //Updates user object in database
 export async function postUser(userDB){//Sends user object to database
   if(auth.currentUser){
@@ -91,6 +98,22 @@ export async function getUser(){
       }
     }
   }
+
+export async function getUserByEmail(email) {
+  if(auth.currentUser){
+    try{
+      let querySnapshot = await getDocs(collection(db, "Users"));
+      querySnapshot.forEach(function(doc) {
+          if(doc.data().email == email){
+            console.log('done');
+            return new String(doc.id);
+          }
+      });
+    }catch(e){
+      alert(e);
+    }
+  }
+}
 
 
 export const userContext = createContext();

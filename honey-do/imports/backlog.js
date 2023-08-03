@@ -31,9 +31,26 @@ async function addRequestDB(req) {
         //getRequestsDB();
         if (auth.currentUser) {
 
+            //FOR ME: CHANGE TO USE REQUESTCONVERTER
             //setRequestLDB((oldIng) => [...oldIng, req]);
-            let RequestDB = doc(db, "Requests", auth.currentUser.uid).withConverter(requestConverter); //Database entry for the user
-            await setDoc(RequestDB, {Requests: new Request('1', "Az PC Cover", " ")});
+            const RequestDB = doc(db, "Users", auth.currentUser.uid); //Database entry for the user
+            await updateDoc(RequestDB, {backlog: arrayUnion(req)});
+        }
+    }catch (e) {
+        alert(e);
+    }
+}
+
+export async function addRequestByID(userID, req) {
+    //Function to add item into /Pantry/UID Requests array
+    try {
+        //getRequestsDB();
+        if (auth.currentUser) {
+
+            //FOR ME: CHANGE TO USE REQUESTCONVERTER
+            //setRequestLDB((oldIng) => [...oldIng, req]);
+            const RequestDB = doc(db, "Users", userID); //Database entry for the user
+            await updateDoc(RequestDB, {backlog: arrayUnion(req)});
         }
     }catch (e) {
         alert(e);
